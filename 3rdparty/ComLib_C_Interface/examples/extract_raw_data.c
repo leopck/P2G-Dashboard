@@ -69,14 +69,14 @@ int radar_auto_connect(void)
 
 	num_of_ports = com_get_port_list(comp_port_list, (size_t)256);
 
-	printf("The number of ports detected: %d", num_of_ports);
+	printf("The number of ports detected: %d\n", num_of_ports);
 	if (num_of_ports == 0)
 	{
 		return -1;
 	}
 	else
 	{
-		printf("List of ports: %s", comp_port_list);
+		printf("List of ports: %s\n", comp_port_list);
 		comport = strtok(comp_port_list, delim);
 
 		while (num_of_ports > 0)
@@ -84,6 +84,7 @@ int radar_auto_connect(void)
 			num_of_ports--;
 
 			// open COM port
+			printf("Starting protocol_connect on comport: %s\n", comport);
 			radar_handle = protocol_connect(comport);
 
 			if (radar_handle >= 0)
@@ -106,7 +107,9 @@ int main(void)
 	int endpointRadarBase = 0;
 
 	// open COM port
+	printf("Starting the radar connection to COM port\n");
 	protocolHandle = radar_auto_connect();
+	printf("Successfully connected to the radar to COM port\n");
 
 	// get endpoint ids
 	if (protocolHandle >= 0)
@@ -119,27 +122,32 @@ int main(void)
 			}
 		}
 	}
+	printf("Successfully got the endpoints\n");
 
 
 	if (endpointRadarBase >= 0)
 	{
 		// register call back functions for adc data
+		printf("Registering callback functions for adc data\n");
 		ep_radar_base_set_callback_data_frame(received_frame_data, NULL);
 
 		// enable/disable automatic trigger
 		if (AUTOMATIC_DATA_FRAME_TRIGGER)
 		{
+			printf("Enabling automatic frame trigger\n");
 			res = ep_radar_base_set_automatic_frame_trigger(protocolHandle,
 															endpointRadarBase,
 															AUTOMATIC_DATA_TRIGER_TIME_US);
 		}
 		else
 		{
+			printf("Diabling automatic frame trigger\n");
 			res = ep_radar_base_set_automatic_frame_trigger(protocolHandle,
 															endpointRadarBase,
 															0);
 		}
 
+		printf("Getting Raw Data in permanent while loop\n");
 		while (1)
 		{
 			// get raw data
