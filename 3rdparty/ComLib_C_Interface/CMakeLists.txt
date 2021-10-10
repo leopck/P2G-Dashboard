@@ -34,8 +34,12 @@ else()
 endif()
 
 include_directories(include)
+include_directories(.)
 
 add_library(p2g STATIC
     ${P2G_HEADER_FILES}
     ${P2G_SOURCE_FILES}
     ${P2G_SERIAL_INTERFACE})
+
+add_executable(hellodemo examples/extract_raw_data.c)
+target_link_libraries(hellodemo LINK_PUBLIC p2g)

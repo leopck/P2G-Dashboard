@@ -69,12 +69,14 @@ int radar_auto_connect(void)
 
 	num_of_ports = com_get_port_list(comp_port_list, (size_t)256);
 
+	printf("The number of ports detected: %d", num_of_ports);
 	if (num_of_ports == 0)
 	{
 		return -1;
 	}
 	else
 	{
+		printf("List of ports: %s", comp_port_list);
 		comport = strtok(comp_port_list, delim);
 
 		while (num_of_ports > 0)
